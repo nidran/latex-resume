@@ -36,6 +36,7 @@
 %%%%%%% --------------------------------------------------------------------------------------
 %%%%%%%  STARTING HERE, DO NOT TOUCH ANYTHING 
 %%%%%%% --------------------------------------------------------------------------------------
+\RequirePackage{fontawesome}
 
 \usepackage{latexsym}
 \usepackage[empty]{fullpage}
@@ -130,6 +131,126 @@ ItalicFont=SourceSansPro-RegularIt.otf
 \titleformat{\subsection}{\vspace{-0.1cm} 
 \bfseries \fontsize{11pt}{2cm}}{}{0em}{}[\vspace{-0.2cm}]
 
+% Define a header for CV
+% Usage: \makecvheader
+\newcommand*{\makecvheader}[1][C]{%
+  \newcommand*{\drawphoto}{%
+    \ifthenelse{\isundefined{\@photo}}{}{%
+      \newlength{\photodim}
+      \ifthenelse{\equal{\@photoshape}{circle}}%
+        {\setlength{\photodim}{1.3cm}}%
+        {\setlength{\photodim}{1.8cm}}%
+      \ifthenelse{\equal{\@photoedge}{edge}}%
+        {\def\@photoborder{darkgray}}%
+        {\def\@photoborder{none}}%
+      \begin{tikzpicture}%
+        \node[\@photoshape, draw=\@photoborder, line width=0.3mm, inner sep=\photodim, fill overzoom image=\@photo] () {};
+      \end{tikzpicture}
+    }%
+  }
+  \newlength{\headertextwidth}
+  \newlength{\headerphotowidth}
+  \ifthenelse{\isundefined{\@photo}}{
+    \setlength{\headertextwidth}{\textwidth}
+    \setlength{\headerphotowidth}{0cm}
+  }{%
+    \setlength{\headertextwidth}{0.76\textwidth}
+    \setlength{\headerphotowidth}{0.24\textwidth}
+  }%
+  \begin{minipage}[c]{\headerphotowidth}%
+    \ifthenelse{\equal{\@photoalign}{left}}{\raggedright\drawphoto}{}
+  \end{minipage}
+  \begin{minipage}[c]{\headertextwidth}
+    \ifthenelse{\equal{#1}{L}}{\raggedright}{\ifthenelse{\equal{#1}{R}}{\raggedleft}{\centering}}
+    \headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}%
+    \\[\acvHeaderAfterNameSkip]%
+    \ifthenelse{\isundefined{\@position}}{}{\headerpositionstyle{\@position\\[\acvHeaderAfterPositionSkip]}}%
+    \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address\\[\acvHeaderAfterAddressSkip]}}%
+    \headersocialstyle{%
+      \newbool{isstart}%
+      \setbool{isstart}{true}%
+      \ifthenelse{\isundefined{\@mobile}}%
+        {}%
+        {%
+          \faMobile\acvHeaderIconSep\@mobile%
+          \setbool{isstart}{false}%
+        }%
+      \ifthenelse{\isundefined{\@email}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{mailto:\@email}{\faEnvelope\acvHeaderIconSep\@email}%
+        }%
+      \ifthenelse{\isundefined{\@homepage}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{http://\@homepage}{\faHome\acvHeaderIconSep\@homepage}%
+        }%
+      \ifthenelse{\isundefined{\@github}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://github.com/\@github}{\faGithubSquare\acvHeaderIconSep\@github}%
+        }%
+      \ifthenelse{\isundefined{\@gitlab}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://gitlab.com/\@gitlab}{\faGitlab\acvHeaderIconSep\@gitlab}%
+        }%
+      \ifthenelse{\isundefined{\@stackoverflowid}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://stackoverflow.com/users/\@stackoverflowid}{\faStackOverflow\acvHeaderIconSep\@stackoverflowname}%
+        }%
+      \ifthenelse{\isundefined{\@linkedin}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.linkedin.com/in/\@linkedin}{\faLinkedinSquare\acvHeaderIconSep\@linkedin}%
+        }%
+      \ifthenelse{\isundefined{\@twitter}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://twitter.com/\@twitter}{\faTwitter\acvHeaderIconSep\@twitter}%
+        }%
+      \ifthenelse{\isundefined{\@skype}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \faSkype\acvHeaderIconSep\@skype%
+        }%
+      \ifthenelse{\isundefined{\@reddit}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.reddit.com/user/\@reddit}{\faReddit\acvHeaderIconSep\@reddit}%
+        }%
+      \ifthenelse{\isundefined{\@xing}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.xing.com/profile/\@xing}{\faXingSquare\acvHeaderIconSep\@xing}
+        }%
+      \ifthenelse{\isundefined{\@extrainfo}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \@extrainfo%
+        }%
+    } \\[\acvHeaderAfterSocialSkip]%
+    \ifthenelse{\isundefined{\@quote}}%
+      {}%
+      {\headerquotestyle{\@quote\\}\vspace{\acvHeaderAfterQuoteSkip}}%
+  \end{minipage}%
+  \begin{minipage}[c]{\headerphotowidth}%
+    \ifthenelse{\equal{\@photoalign}{right}}{\raggedleft\drawphoto}{}
+  \end{minipage}
+}
+
 %%%%%%% --------------------------------------------------------------------------------------
 %%%%%%% --------------------------------------------------------------------------------------
 %%%%%%%  END OF "DO NOT TOUCH" REGION
@@ -142,24 +263,21 @@ ItalicFont=SourceSansPro-RegularIt.otf
 %%%%%%%  HEADER
 %%%%%%% --------------------------------------------------------------------------------------
 \begin{center}
-    \begin{minipage}[b]{0.24\textwidth}
-            \large NY, USA \\
-            \large (201)-993-9522 \\
-            \large \href{mailto:youremail@email.com}{youremail@email.com} 
-    \end{minipage}% 
-    \begin{minipage}[b]{0.5\textwidth}
+   
+ 
             \centering
-            {\HUGE Nidhi Ranjan} \\ %
-            \vspace{0.1cm}
+            \textbf{{\LARGE Nidhi Ranjan}} \\ %
+            \vspace{0.2cm}
+            
+            \hspace {0.15cm}\faMobile \hspace {0.15cm} +1-(201)-993-9522  \hspace {0.15cm}| \hspace {0.15cm}
+          \href{mailto:\@nr2387@nyu.edu}{\faEnvelope \hspace {0.15cm} nr2387@nyu.edu } \hspace {0.15cm} |  \hspace {0.15cm}
+            \href{https://github.com/nidran}{\faGithub  \hspace {0.1cm} nidran}\hspace {0.15cm} | \hspace {0.15cm}  \href{https://www.linkedin.com/in/nidran/}{\faLinkedinSquare  \hspace {0.1cm} nidran} | \hspace {0.15cm} \href{https://nidran.github.io}{\faGlobe \hspace {0.15cm} nidran.github.io} |
             % {\color{UI_blue} \Large{Target Job}} \\
-    \end{minipage}% 
-    \begin{minipage}[b]{0.24\textwidth}
-            \flushright \large  %Willing to Relocate
-            {\href{https://www.linkedin.com/in/link/}{linkedin.com/in/yourlink} } \\
-            \href{https://Add_your_portfolio_here_}{Portfolio}
-    \end{minipage}   
+  \hspace {0.15cm} \faMapMarker \hspace {0.15cm}  New York, USA\\
+            \vspace{0.15cm}
+   
     
-% \vspace{-0.15cm} 
+\vspace{-0.15cm} 
 % {\color{UI_blue} \hrulefill}
 \end{center}
 % \vspace{-0.2cm}
@@ -169,46 +287,24 @@ ItalicFont=SourceSansPro-RegularIt.otf
 %%%%%%%  EDUCATION
 %%%%%%% --------------------------------------------------------------------------------------
 \section{Education }
-\subsection*{Courant Institute of Mathematical Sciences,New York University , \hfill Dec 2022} 
-{Master of Science, , {\normalsize \normalfont University of the North, GPA: x.xx/4.00} \hfill Dec 2022} 
-\vspace{0.1cm}
-\subsection*{Bachelor of Science, ABC, {\normalsize \normalfont University of Westeros, GPA: x.xx/10.00} \hfill Mon yyyy --- Mon yyyy} 
-\vspace{0.2cm}
+\subsection*{Courant Institute of Mathematical Sciences, New York University \hfill Dec 2022} 
+{Master of Science in Computer Science } 
+\vspace{-0.25cm}
+\subsection*{National Institute of Technology Goa  \hfill July 2018 } 
+{Graduated with a Bachelor of Technology in Computer Science and Engineering } 
+\vspace{-0.2cm}
 
 %%%%%%% --------------------------------------------------------------------------------------
-%%%%%%%  ACADEMIC PROJECTS
+%%%%%%%  SKILLS
 %%%%%%% --------------------------------------------------------------------------------------
-\section{Projects} %% (Or "Research", select as appropriate)
-
-%%% ----- Best way to write items (Credit - FAANGPath)
-        % \item Achieved X\% growth for XYZ using A, B, and C skills.
-        % \item Led XYZ which led to X\% of improvement in ABC
-        % \item Developed XYZ that did A, B, and C using X, Y, and Z. 
-
-
-%%%%%%% ----------------------------------- Role 1 ----------------------------------- %%%%%%%
-\subsection*{Role 1, {\normalsize\normalfont Department Name} \hfill Mon yyyy --- Mon yyyy} 
-    \begin{zitemize}
-        \item Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus suscipit scelerisque urna, id facilisis metus vestibulum at. In nec sapien dignissim, ultricies dolor accumsan, malesuada augue 
-        \item Aenean nec dui et felis mattis suscipit ut sed tortor. Sed nec viverra nulla. Mauris in dapibus quam.Aenean ut ligula sed orci interdum scelerisque. Cras eget odio mattis, accumsan arcu ac, interdum enim. Quisque et pharetra sem, in euismod leo 
-    \end{zitemize}
-
-
-%%%%%%% ----------------------------------- Role 2 ----------------------------------- %%%%%%%
-\subsection*{Role 2, {\normalsize\normalfont Department Name} \hfill Mon yyyy --- Mon yyyy} 
-    \begin{zitemize}
-        \item Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus suscipit scelerisque urna, id facilisis metus vestibulum at. In nec sapien dignissim, ultricies dolor accumsan, malesuada augue 
-        \item Aenean nec dui et felis mattis suscipit ut sed tortor. Sed nec viverra nulla. Mauris in dapibus quam.Aenean ut ligula sed orci interdum scelerisque. Cras eget odio mattis, accumsan arcu ac, interdum enim. Quisque et pharetra sem, in euismod leo 
-    \end{zitemize}
-
-
-%%%%%%% ----------------------------------- Role 3 ----------------------------------- %%%%%%%
-\subsection*{Role 3, {\normalsize\normalfont Department Name} \hfill Mon yyyy --- Mon yyyy} 
-    \begin{zitemize}
-        \item Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus suscipit scelerisque urna, id facilisis metus vestibulum at. In nec sapien dignissim, ultricies dolor accumsan, malesuada augue 
-        \item Aenean nec dui et felis mattis suscipit ut sed tortor. Sed nec viverra nulla. Mauris in dapibus quam.Aenean ut ligula sed orci interdum scelerisque. Cras eget odio mattis, accumsan arcu ac, interdum enim. Quisque et pharetra sem, in euismod leo 
-    \end{zitemize}
-
+\section{Software Skills}
+\begin{tabular}{p{11em} p{1em} p{43em}}
+\hskills{Languages }&  & Java, C/C++, Python, JavaScript \\
+\hskills{Database}& & MySQL, MongoDB, Oracle SQL, PostgreSQL \\
+\hskills{Frameworks}& &  Angular 9, Pytorch, TensorFlow, Pandas, Keras, Scikit-learn, Flask, Springboot, Git \\
+\hskills{MOOC} &  & Intel Edge AI Nanodegree, Nerual Networks and Deep Learning  \\
+\end{tabular}
+\vspace{-0.2cm}
 
 
 %%%%%%% --------------------------------------------------------------------------------------
@@ -224,20 +320,63 @@ ItalicFont=SourceSansPro-RegularIt.otf
         
 
 %%%%%%% ----------------------------------- Role 4 ----------------------------------- %%%%%%%
-\subsection*{XXX Intern \hfill Mon yyyy --- Mon yyyy} 
-\subtext{Add Company Name Here \hfill Location} 
+\subsection*{Barclays, Pune, India  | Analyst \hfill July 2018 --- Jan 2021} 
+\vspace{0.2cm}
+\subtext{}
     \begin{zitemize}
-        \item Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet justo porta magna ultrices ultricies. Nam sem augue, lobortis sit amet venenatis sed, rutrum vel dui. Fusce mauris libero, ultrices quis convallis venenatis, malesuada at neque. Vivamus facilisis metus enim, convallis egestas dui dictum vel. Integer lacus nisl, molestie vitae bibendum eget, finibus vitae ligula. 
-        \item Duis fermentum arcu vitae faucibus cursus. Praesent aliquet id risus dictum lobortis. Donec varius tincidunt aliquet.Nulla congue nulla sed accumsan consequat. Pellentesque facilisis cursus faucibus.
+        \item {Redesigned and migrated Business Lending in Business Banking from AngularJS to Angular 9}
+         \item {Contributed to enabling merchants as a business segment for the Online banking platform thereby developing front-end, back-end and authorisation solutions for it.
+         \item Developed and designed features for merchant on-boarding, overview onto the Online Banking channel, with facilities of download and viewing of transactions. This added around 80,000 customers to the channel.}
+        \item {Provided a tactical solution for multi business users and implemented new user experience for a Smart Business Dashboard which increased new registrations by 23\%.
+        \item {Engineered a new UI/UX for Smart Business dashboard, with flexibility's for online update of personal data, which was earlier available only offline ( User registrations went up by 3000 Business Customers in Week 0}
+        \item {Contributed and  developed a centralised platform for the development of Restful APIs. Developed Restful API for business instant lending feature, with the fault rate decreasing by 20\%}
+       
     \end{zitemize}
 
 
 %%%%%%% ----------------------------------- Role 5 ----------------------------------- %%%%%%%
-\subsection*{YYY Intern \hfill Mon yyyy --- Mon yyyy} 
-\subtext{Add Company Name Here \hfill Location} 
+\subsection*{Innoplexus Consulting Services, Pune, India  | Data Science Intern \hfill May 2016 --- July 2016} 
+\vspace{0.2cm}
+\subtext{}
     \begin{zitemize}
-        \item Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet justo porta magna ultrices ultricies. Nam sem augue, lobortis sit amet venenatis sed, rutrum vel dui. Fusce mauris libero, ultrices quis convallis venenatis, malesuada at neque. 
-        \item Duis fermentum arcu vitae faucibus cursus. Praesent aliquet id risus dictum lobortis. Donec varius tincidunt aliquet.
+        \item {Created a centralized platform for crawling , extracting and unifying pharmaceutical data.}
+        \item {Automated the ETL(Extraction,Transformation and Load)
+processes for the pharmaceutical products Oilbird and Touchpoint.}
+        \item {Utilizing Machine Learning, engineered an universal crawler that crawled data from various sources and accordingly segmented with an accuracy of over 89\%.}
+    \end{zitemize}
+
+
+
+%%%%%%% --------------------------------------------------------------------------------------
+%%%%%%%  ACADEMIC PROJECTS
+%%%%%%% --------------------------------------------------------------------------------------
+\section{Projects} %% (Or "Research", select as appropriate)
+
+%%% ----- Best way to write items (Credit - FAANGPath)
+        % \item Achieved X\% growth for XYZ using A, B, and C skills.
+        % \item Led XYZ which led to X\% of improvement in ABC
+        % \item Developed XYZ that did A, B, and C using X, Y, and Z. 
+
+
+%%%%%%% ----------------------------------- Role 1 ----------------------------------- %%%%%%%
+\subsection*{Predicting time to death for Sepsis Patients using Causal Inference \hfill New York University} 
+    \begin{zitemize}
+         \item Estimated the effects of full interventions on a septic patient's time to death. 
+         \item  We use LODE to estimate causal effects of full interventions on patients with Sepsis on MIMIC -IV dataset
+    \end{zitemize}
+%%%%%%% ----------------------------------- Role 1 ----------------------------------- %%%%%%%
+\subsection*{Video Surveillance for COVID 19 Spread} 
+    \begin{zitemize}
+         \item Developed a video surveillance application for crowd detection using one shot learning for identifying crowded hot spots during Covid-19
+        \item Also incorporated mask detection in the crowd, crowd density and its segregation on the basis of zones into red/yellow/green based on districts for Indian demographics
+    \end{zitemize}
+
+
+%%%%%%% ----------------------------------- Role 2 ----------------------------------- %%%%%%%
+\subsection*{Classification \& Annotation in Medical Image Analysis \hfill IIT Mandi, NIT Goa} 
+    \begin{zitemize}
+         \item {Constructed a novel approach for classifying H\&E stained breast histology microscopy images in four classes: normal, benign, in-situ carcinoma and invasive carcinoma, using CNN's in a hierarchical architecture.}
+        \item{Approach garnered a 89\% accuracy on test data, with a #15 rank  worldwide}
     \end{zitemize}
 
 
@@ -245,16 +384,7 @@ ItalicFont=SourceSansPro-RegularIt.otf
 
 
 
-%%%%%%% --------------------------------------------------------------------------------------
-%%%%%%%  SKILLS
-%%%%%%% --------------------------------------------------------------------------------------
-\section{Technical Skills}
-\begin{tabular}{p{11em} p{1em} p{43em}}
-\hskills{Physics Skills }&  &  A, B, C, D, E, F \\
-\hskills{Some Other Skills} &  & G, H, I, J, K, L, M  \\
-\hskills{Programming/Scripting} &  & N, O, P, Q, R, S, T \\
-\end{tabular}
-\vspace{-0.2cm}
+
 
 
 
@@ -281,22 +411,24 @@ ItalicFont=SourceSansPro-RegularIt.otf
 %%%%%%% --------------------------------------------------------------------------------------
 %%%%%%%  PUBLICATIONS
 %%%%%%% --------------------------------------------------------------------------------------
-\section{Publications} 
-\renewcommand\refname{\vskip -1.5em}
-\nocite{*}
-\printbibliography[heading=none]
-\vspace{-0.4cm}
+% \section{Publications} 
+% \renewcommand\refname{\vskip -1.5em}
+% \nocite{*}
+% \printbibliography[heading=none]
+% \vspace{-0.4cm}
 
 
 
 %%%%%%% --------------------------------------------------------------------------------------
 %%%%%%%  AWARDS & HONORS
 %%%%%%% --------------------------------------------------------------------------------------
-\section{Awards \& Honors}
+\section{Leadership \& Awards}
 \vspace{-0.2cm}
 \begin{tabular}[t]{ p{4em} p{50em}}
-\hskills{yyyy} & Award 1 (\hskills{\$xxxxxx}); Award 2 (\hskills{\$xxxxxx}); Award 3 (\hskills{\$xxxxxx}); Award 4 (\hskills{\$xxxxxx}); Award 5 (\hskills{\$xxxxxx}) \\ % 
-\hskills{yyyy} & Award 6 (\hskills{\$xxxxxx}); Award 7 (\hskills{\$xxxxxx}); Award 8 (\hskills{\$xxxxxx}) \\
+\hskills{2021} & Recitation Leader - Mathematics for Economics  {\hfill New York University}\\ 
+\hskills{2020} & Finalist - AWS Deepracer Marathon {\hfill Barclays}\\ 
+\hskills{2020} & Onboarding Buddy - Mentored new joiners in Business Banking | Coordinator - Ways of Working {\hfill Barclays}\\ 
+\hskills{2018} & Vice President - Computer Science and Engineering Association  {\hfill NIT Goa}\\ 
 \end{tabular} 
 
 %%%%%%% ---------------------------- END DOC HERE ---------------------------- %%%%%%% 
